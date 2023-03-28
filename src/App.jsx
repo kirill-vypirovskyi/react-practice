@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import './App.scss';
 import { Filters } from './components/Filters';
 
@@ -56,15 +56,10 @@ const sortProducts = (products, sortBy, sortOrder) => {
 
 export const App = () => {
   const [userId, selectUserId] = useState(0);
-  const [products, setProducts] = useState(rawProducts);
   const [query, setQuery] = useState('');
   const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
   const [sortBy, setSortBy] = useState('');
   const [desc, setSortDesc] = useState(false);
-
-  useEffect(() => {
-    setProducts(rawProducts);
-  }, []);
 
   const handleCategorySelecting = useCallback((id) => {
     if (!id) {
@@ -106,9 +101,9 @@ export const App = () => {
 
   const filterCatProducts = useMemo(() => {
     return userId
-      ? products.filter(product => product.user.id === userId)
-      : products;
-  }, [userId, products]);
+      ? rawProducts.filter(product => product.user.id === userId)
+      : rawProducts;
+  }, [userId, rawProducts]);
 
   const filterQueryProducts = useMemo(() => {
     return filterCatProducts.filter((product) => {
