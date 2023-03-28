@@ -10,6 +10,8 @@ export const Filters = ({
   query,
   onChangeQuery,
   onResetFilter,
+  selectedCategories,
+  onSelectCategory,
 }) => {
   return (
     <nav className="panel">
@@ -75,7 +77,12 @@ export const Filters = ({
         <a
           href="#/"
           data-cy="AllCategories"
-          className="button is-success mr-6 is-outlined"
+          // className="button is-success mr-6 is-outlined"
+          className={classNames(
+            'button is-success mr-6',
+            { 'is-outlined': selectedCategories.length !== 0 },
+          )}
+          onClick={() => onSelectCategory()}
         >
           All
         </a>
@@ -91,10 +98,11 @@ export const Filters = ({
               data-cy="Category"
               className={classNames(
                 'button mr-2 my-1',
-                { 'is-info': false },
+                { 'is-info': selectedCategories.includes(id) },
               )}
               href="#/"
               key={id}
+              onClick={() => onSelectCategory(id)}
             >
               {title}
             </a>

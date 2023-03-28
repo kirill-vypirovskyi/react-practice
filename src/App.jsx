@@ -25,6 +25,19 @@ export const App = () => {
   const [userId, selectUserId] = useState(0);
   const [products, setProducts] = useState(rawProducts);
   const [query, setQuery] = useState('');
+  const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
+
+  const handleCategorySelecting = useCallback((id) => {
+    if (!id) {
+      setSelectedCategoriesId([]);
+
+      return;
+    }
+
+    setSelectedCategoriesId(selectedCategoriesId.includes(id)
+      ? selectedCategoriesId.filter(curId => curId !== id)
+      : [...selectedCategoriesId, id]);
+  });
 
   useEffect(() => {
     setProducts(rawProducts);
@@ -34,9 +47,10 @@ export const App = () => {
     setQuery(event.target.value);
   });
 
-  const handleFilterReseting = useCallback(() => {
+  const handleAllFilterReseting = useCallback(() => {
     setQuery('');
     selectUserId(0);
+    setSelectedCategoriesId([]);
   }, []);
 
   const filterCatProducts = useMemo(() => {
@@ -51,6 +65,16 @@ export const App = () => {
     });
   }, [filterCatProducts, query]);
 
+  const filterCategories = useMemo(() => {
+    if (selectedCategoriesId.length !== 0) {
+      return filterQueryProducts.filter(product => (
+        selectedCategoriesId.includes(product.categoryId)
+      ));
+    }
+
+    return filterQueryProducts;
+  }, [filterQueryProducts, selectedCategoriesId]);
+
   return (
     <div className="section">
       <div className="container">
@@ -64,11 +88,13 @@ export const App = () => {
             onChangeQuery={handleQueryChange}
             users={usersFromServer}
             categories={categoriesFromServer}
-            onResetFilter={handleFilterReseting}
+            onResetFilter={handleAllFilterReseting}
+            selectedCategories={selectedCategoriesId}
+            onSelectCategory={handleCategorySelecting}
           />
         </div>
 
-        <Table products={filterQueryProducts} />
+        <Table products={filterCategories} />
       </div>
     </div>
   );
