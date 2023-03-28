@@ -106,9 +106,9 @@ export const App = () => {
   }, [userId, rawProducts]);
 
   const filterQueryProducts = useMemo(() => {
-    return filterCatProducts.filter((product) => {
-      return product.name.toLowerCase().includes(query.toLowerCase());
-    });
+    return filterCatProducts.filter(product => (
+      product.name.toLowerCase().includes(query.toLowerCase())
+    ));
   }, [filterCatProducts, query]);
 
   const filterCategories = useMemo(() => {
@@ -121,9 +121,9 @@ export const App = () => {
     return filterQueryProducts;
   }, [filterQueryProducts, selectedCategoriesId]);
 
-  const sorted = useMemo(() => {
-    return sortProducts(filterCategories, sortBy, desc);
-  }, [filterCategories, sortBy, desc]);
+  const sorted = useMemo(() => (
+    sortProducts(filterCategories, sortBy, desc)
+  ), [filterCategories, sortBy, desc]);
 
   return (
     <div className="section">
