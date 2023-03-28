@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './App.scss';
 import { Filters } from './components/Filters';
 
@@ -8,7 +8,7 @@ import categoriesFromServer from './api/categories';
 import productsFromServer from './api/products';
 import { Table } from './components/Table';
 
-const products = productsFromServer.map((product) => {
+const rawProducts = productsFromServer.map((product) => {
   const category = categoriesFromServer
     .find(cat => product.categoryId === cat.id);
   const user = usersFromServer
@@ -22,16 +22,34 @@ const products = productsFromServer.map((product) => {
 });
 
 export const App = () => {
+  const [userId, selectUserId] = useState(0);
+  const [products, setProducts] = useState(rawProducts);
+
+  useEffect(() => {
+    setProducts(rawProducts);
+  }, []);
+
+  const preparedProducts = useMemo(() => {
+    return userId
+      ? products.filter(product => product.user.id === userId)
+      : products;
+  }, [userId]);
+
   return (
     <div className="section">
       <div className="container">
         <h1 className="title">Product Categories</h1>
 
         <div className="block">
-          <Filters users={usersFromServer} categories={categoriesFromServer} />
+          <Filters
+            userId={userId}
+            onUserSelect={selectUserId}
+            users={usersFromServer}
+            categories={categoriesFromServer}
+          />
         </div>
 
-        <Table products={products} />
+        <Table products={preparedProducts} />
       </div>
     </div>
   );
