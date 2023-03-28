@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.scss';
 import { Filters } from './components/Filters';
 
@@ -24,16 +24,27 @@ const rawProducts = productsFromServer.map((product) => {
 export const App = () => {
   const [userId, selectUserId] = useState(0);
   const [products, setProducts] = useState(rawProducts);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     setProducts(rawProducts);
   }, []);
 
-  const preparedProducts = useMemo(() => {
+  const handleQueryChange = useCallback((event) => {
+    setQuery(event.target.value);
+  });
+
+  const filterCatProducts = useMemo(() => {
     return userId
       ? products.filter(product => product.user.id === userId)
       : products;
-  }, [userId]);
+  }, [userId, products]);
+
+  const filterQueryProducts = useMemo(() => {
+    return filterCatProducts.filter((product) => {
+      return product.name.toLowerCase().includes(query.toLowerCase());
+    });
+  }, [filterCatProducts, query]);
 
   return (
     <div className="section">
@@ -44,12 +55,14 @@ export const App = () => {
           <Filters
             userId={userId}
             onUserSelect={selectUserId}
+            query={query}
+            onChangeQuery={handleQueryChange}
             users={usersFromServer}
             categories={categoriesFromServer}
           />
         </div>
 
-        <Table products={preparedProducts} />
+        <Table products={filterQueryProducts} />
       </div>
     </div>
   );
