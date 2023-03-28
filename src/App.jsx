@@ -34,6 +34,11 @@ export const App = () => {
     setQuery(event.target.value);
   });
 
+  const handleFilterReseting = useCallback(() => {
+    setQuery('');
+    selectUserId(0);
+  }, []);
+
   const filterCatProducts = useMemo(() => {
     return userId
       ? products.filter(product => product.user.id === userId)
@@ -59,6 +64,7 @@ export const App = () => {
             onChangeQuery={handleQueryChange}
             users={usersFromServer}
             categories={categoriesFromServer}
+            onResetFilter={handleFilterReseting}
           />
         </div>
 
