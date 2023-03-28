@@ -12,7 +12,7 @@ const rawProducts = productsFromServer.map((product) => {
   const category = categoriesFromServer
     .find(cat => product.categoryId === cat.id);
   const user = usersFromServer
-    .find(us => us.id === category.ownerId); // find by category.ownerId
+    .find(us => us.id === category.ownerId);
 
   return {
     ...product,
