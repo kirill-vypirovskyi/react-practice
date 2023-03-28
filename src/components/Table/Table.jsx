@@ -3,7 +3,12 @@ import classNames from 'classnames';
 import React from 'react';
 
 /* eslint-disable arrow-body-style */
-export const Table = ({ products }) => {
+export const Table = ({
+  products,
+  onSortChange,
+  sortBy,
+  sortDesc,
+}) => {
   return (
     <div className="box table-container">
       {products.length === 0
@@ -22,9 +27,22 @@ export const Table = ({ products }) => {
                   <span className="is-flex is-flex-wrap-nowrap">
                     ID
 
-                    <a href="#/">
+                    <a
+                      href="#/"
+                      onClick={() => onSortChange('id')}
+                    >
                       <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort" />
+                        <i
+                          data-cy="SortIcon"
+                          className={classNames(
+                            'fas',
+                            {
+                              'fa-sort': sortBy !== 'id',
+                              'fa-sort-down': sortBy === 'id' && sortDesc,
+                              'fa-sort-up': sortBy === 'id' && !sortDesc,
+                            },
+                          )}
+                        />
                       </span>
                     </a>
                   </span>
@@ -34,9 +52,22 @@ export const Table = ({ products }) => {
                   <span className="is-flex is-flex-wrap-nowrap">
                     Product
 
-                    <a href="#/">
+                    <a
+                      href="#/"
+                      onClick={() => onSortChange('product')}
+                    >
                       <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort-down" />
+                        <i
+                          data-cy="SortIcon"
+                          className={classNames(
+                            'fas',
+                            {
+                              'fa-sort': sortBy !== 'product',
+                              'fa-sort-down': sortBy === 'product' && sortDesc,
+                              'fa-sort-up': sortBy === 'product' && !sortDesc,
+                            },
+                          )}
+                        />
                       </span>
                     </a>
                   </span>
@@ -46,9 +77,22 @@ export const Table = ({ products }) => {
                   <span className="is-flex is-flex-wrap-nowrap">
                     Category
 
-                    <a href="#/">
+                    <a
+                      href="#/"
+                      onClick={() => onSortChange('category')}
+                    >
                       <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort-up" />
+                        <i
+                          data-cy="SortIcon"
+                          className={classNames(
+                            'fas',
+                            {
+                              'fa-sort': sortBy !== 'category',
+                              'fa-sort-down': sortBy === 'category' && sortDesc,
+                              'fa-sort-up': sortBy === 'category' && !sortDesc,
+                            },
+                          )}
+                        />
                       </span>
                     </a>
                   </span>
@@ -58,9 +102,22 @@ export const Table = ({ products }) => {
                   <span className="is-flex is-flex-wrap-nowrap">
                     User
 
-                    <a href="#/">
+                    <a
+                      href="#/"
+                      onClick={() => onSortChange('user')}
+                    >
                       <span className="icon">
-                        <i data-cy="SortIcon" className="fas fa-sort" />
+                        <i
+                          data-cy="SortIcon"
+                          className={classNames(
+                            'fas',
+                            {
+                              'fa-sort': sortBy !== 'user',
+                              'fa-sort-down': sortBy === 'user' && sortDesc,
+                              'fa-sort-up': sortBy === 'user' && !sortDesc,
+                            },
+                          )}
+                        />
                       </span>
                     </a>
                   </span>

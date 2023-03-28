@@ -21,11 +21,50 @@ const rawProducts = productsFromServer.map((product) => {
   };
 });
 
+const sortProducts = (products, sortBy, sortOrder) => {
+  const newProducts = [...products];
+
+  switch (sortBy) {
+    case 'id':
+      newProducts.sort((first, second) => first.id - second.id);
+      break;
+    case 'product':
+      newProducts.sort((first, second) => (
+        first.name.localeCompare(second.name)
+      ));
+      break;
+    case 'category':
+      newProducts.sort((first, second) => (
+        first.category.title.localeCompare(second.category.title)
+      ));
+      break;
+    case 'user':
+      newProducts.sort((first, second) => (
+        first.user.name.localeCompare(second.user.name)
+      ));
+      break;
+    default:
+      break;
+  }
+
+  if (sortOrder) {
+    newProducts.reverse();
+  }
+
+  return newProducts;
+};
+
 export const App = () => {
   const [userId, selectUserId] = useState(0);
   const [products, setProducts] = useState(rawProducts);
   const [query, setQuery] = useState('');
   const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
+  const [sortBy, setSortBy] = useState('');
+  const [desc, setSortDesc] = useState(false);
+
+  useEffect(() => {
+    setProducts(rawProducts);
+  }, []);
 
   const handleCategorySelecting = useCallback((id) => {
     if (!id) {
@@ -39,10 +78,6 @@ export const App = () => {
       : [...selectedCategoriesId, id]);
   });
 
-  useEffect(() => {
-    setProducts(rawProducts);
-  }, []);
-
   const handleQueryChange = useCallback((event) => {
     setQuery(event.target.value);
   });
@@ -52,6 +87,22 @@ export const App = () => {
     selectUserId(0);
     setSelectedCategoriesId([]);
   }, []);
+
+  const handleSortChange = (category) => {
+    if (sortBy !== category) {
+      setSortBy(category);
+      setSortDesc(false);
+    }
+
+    if (sortBy === category && !desc) {
+      setSortDesc(true);
+    }
+
+    if (sortBy === category && desc) {
+      setSortBy('');
+      setSortDesc(false);
+    }
+  };
 
   const filterCatProducts = useMemo(() => {
     return userId
@@ -75,6 +126,10 @@ export const App = () => {
     return filterQueryProducts;
   }, [filterQueryProducts, selectedCategoriesId]);
 
+  const sorted = useMemo(() => {
+    return sortProducts(filterCategories, sortBy, desc);
+  }, [filterCategories, sortBy, desc]);
+
   return (
     <div className="section">
       <div className="container">
@@ -94,7 +149,12 @@ export const App = () => {
           />
         </div>
 
-        <Table products={filterCategories} />
+        <Table
+          products={sorted}
+          onSortChange={handleSortChange}
+          sortBy={sortBy}
+          sortDesc={desc}
+        />
       </div>
     </div>
   );
